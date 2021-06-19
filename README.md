@@ -76,6 +76,33 @@ resource "kubernetes_manifest_hcl" "configmap_test" {
 }
 ```
 
+### Common issues:
+
+**error**:
+```
+'status' attribute key is not allowed in manifest configuration`
+```
+This means your yaml files contain the toplevel status field. 
+It's not writable. Using `--strip` avoids this.
+
+**solution**:
+```
+tfk8s -f input.yaml --strip -o output.tf
+```
+
+**error**:
+```
+The provider provider.kubernetes does not support resource type
+"kubernetes_manifest".
+```
+**solution**:
+You probably want to target the [kubernetes-alpha](https://github.com/hashicorp/terraform-provider-kubernetes-alpha) provider.
+You can do that like so:
+```
+tfk8s -f input.yaml -p "kubernetes-alpha" -o output.tf
+```
+
+
 ### Use with kubectl to output maps instead of YAML
 
 ```
